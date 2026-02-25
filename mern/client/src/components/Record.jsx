@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 export default function Record() {
   const [form, setForm] = useState({
-    name: "",
-    position: "",
-    level: "",
+    name: '',
+    position: '',
+    level: '',
   });
   const [isNew, setIsNew] = useState(true);
   const params = useParams();
@@ -14,7 +14,7 @@ export default function Record() {
   useEffect(() => {
     async function fetchData() {
       const id = params.id?.toString() || undefined;
-      if(!id) return;
+      if (!id) return;
       setIsNew(false);
       const response = await fetch(
         `http://localhost:5050/record/${params.id.toString()}`
@@ -27,7 +27,7 @@ export default function Record() {
       const record = await response.json();
       if (!record) {
         console.warn(`Record with id ${id} not found`);
-        navigate("/");
+        navigate('/');
         return;
       }
       setForm(record);
@@ -51,19 +51,19 @@ export default function Record() {
       let response;
       if (isNew) {
         // if we are adding a new record we will POST to /record.
-        response = await fetch("http://localhost:5050/record", {
-          method: "POST",
+        response = await fetch('http://localhost:5050/record', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(person),
         });
       } else {
         // if we are updating a record we will PATCH to /record/:id.
         response = await fetch(`http://localhost:5050/record/${params.id}`, {
-          method: "PATCH",
+          method: 'PATCH',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(person),
         });
@@ -75,15 +75,17 @@ export default function Record() {
     } catch (error) {
       console.error('A problem occurred with your fetch operation: ', error);
     } finally {
-      setForm({ name: "", position: "", level: "" });
-      navigate("/");
+      setForm({ name: '', position: '', level: '' });
+      navigate('/');
     }
   }
 
   // This following section will display the form that takes the input from the user.
   return (
     <>
-      <h3 className="text-lg font-semibold p-4">Create/Update Employee Record</h3>
+      <h3 className="text-lg font-semibold p-4">
+        Create/Update Employee Record
+      </h3>
       <form
         onSubmit={onSubmit}
         className="border rounded-lg overflow-hidden p-4"
@@ -153,7 +155,7 @@ export default function Record() {
                       type="radio"
                       value="Intern"
                       className="h-4 w-4 border-slate-300 text-slate-600 focus:ring-slate-600 cursor-pointer"
-                      checked={form.level === "Intern"}
+                      checked={form.level === 'Intern'}
                       onChange={(e) => updateForm({ level: e.target.value })}
                     />
                     <label
@@ -168,7 +170,7 @@ export default function Record() {
                       type="radio"
                       value="Junior"
                       className="h-4 w-4 border-slate-300 text-slate-600 focus:ring-slate-600 cursor-pointer"
-                      checked={form.level === "Junior"}
+                      checked={form.level === 'Junior'}
                       onChange={(e) => updateForm({ level: e.target.value })}
                     />
                     <label
@@ -183,7 +185,7 @@ export default function Record() {
                       type="radio"
                       value="Senior"
                       className="h-4 w-4 border-slate-300 text-slate-600 focus:ring-slate-600 cursor-pointer"
-                      checked={form.level === "Senior"}
+                      checked={form.level === 'Senior'}
                       onChange={(e) => updateForm({ level: e.target.value })}
                     />
                     <label

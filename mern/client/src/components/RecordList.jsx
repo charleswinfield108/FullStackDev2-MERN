@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Record = (props) => (
   <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
@@ -57,7 +57,7 @@ export default function RecordList() {
   // This method will delete a record
   async function deleteRecord(id) {
     await fetch(`http://localhost:5050/record/${id}`, {
-      method: "DELETE",
+      method: 'DELETE',
     });
     const newRecords = records.filter((el) => el._id !== id);
     setRecords(newRecords);
@@ -99,9 +99,7 @@ export default function RecordList() {
                 </th>
               </tr>
             </thead>
-            <tbody className="[&_tr:last-child]:border-0">
-              {recordList()}
-            </tbody>
+            <tbody className="[&_tr:last-child]:border-0">{recordList()}</tbody>
           </table>
         </div>
       </div>
