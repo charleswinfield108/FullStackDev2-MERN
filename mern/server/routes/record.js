@@ -1,7 +1,7 @@
 import express from 'express';
 
 //This will Help Us Connect to the Database
-import db from "../db/connection.js";
+import { getDb } from "../db/connection.js";
 
 //This will help convert the id from string to ObjectId for the _id.
 import { ObjectId } from "mongodb";
@@ -13,14 +13,15 @@ const router = express.Router();
 
 //This sections will help you get a list of all the records
 router.get("/", async (req, res) => {
-    let collection = await db.collection("records");
+    let collection = await getDb().collection("records");
     let results = await collection.find({}).toArray();
     res.send(results).status(200);
 });
 
 //This section will help you get a single record by id
+//This section will help you get a single record by id
 router.get("/:id", async (req, res) => {
-    let collection = await db.collection("records");
+    let collection = await getDb().collection("records");
     let query = { _id: new ObjectId(req.params.id) };
     let result = await collection.findOne(query);
 
@@ -29,6 +30,7 @@ router.get("/:id", async (req, res) => {
 });
 
 //This section will help you create a new record
+//This section will help you create a new record
 router.post("/", async (req, res) => {
     try {
         let newDocument ={
@@ -36,7 +38,7 @@ router.post("/", async (req, res) => {
             position: req.body.position,
             level: req.body.level
         };
-        let collection = await db.collection("records");
+        let collection = await getDb().collection("records");
         let result = await collection.insertOne(newDocument);
         res.send(result).status(204);
     } catch (err) {
@@ -46,6 +48,7 @@ router.post("/", async (req, res) => {
 
     });
 
+    //This section will help you update a record by id
     //This section will help you update a record by id
     router.patch("/:id", async (req, res) => {
         try {
@@ -57,7 +60,7 @@ router.post("/", async (req, res) => {
                     level: req.body.level
                 }
             };
-            let collection = await db.collection("records");
+            let collection = await getDb().collection("records");
             let result = await collection.updateOne(query, update);
             res.send(result).status(200);
         } catch (err) {
@@ -67,11 +70,12 @@ router.post("/", async (req, res) => {
     });
 
     //This section will help you delete a record
+    //This section will help you delete a record
     router.delete("/:id", async (req, res) => {
         try {
             const query = { _id: new ObjectId(req.params.id) };
 
-            let collection = db.collection("records");
+            let collection = getDb().collection("records");
             let result = await collection.deleteOne(query);
 
             res.send(result).status(200);
