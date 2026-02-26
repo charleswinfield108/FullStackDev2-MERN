@@ -5,7 +5,7 @@ export default function RequireAuth({ children }) {
   const token = sessionStorage.getItem('authToken');
 
   if (!token) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 
   return children;

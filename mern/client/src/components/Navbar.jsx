@@ -7,7 +7,7 @@ export default function Navbar() {
   function handleLogout() {
     localStorage.removeItem('authToken');
     sessionStorage.removeItem('authToken');
-    navigate('/login');
+    navigate('/admin/login');
   }
 
   return (
@@ -26,10 +26,10 @@ export default function Navbar() {
             Logout
           </button>
         ) : (
-          <NavLink className="btn btn-outline" to="/login">
+          <NavLink className="btn btn-outline" to="/admin/login">
             Login
           </NavLink>
-        )}
+        )}}
         <NavLink className="btn btn-primary" to="/admin/create">
           Create Agent
         </NavLink>

@@ -32,7 +32,7 @@ export default function Unauthorized() {
           <p className="login-subtitle">
             Your account was not recognized or your session expired.
           </p>
-          <NavLink className="login-button" to="/login">
+          <NavLink className="login-button" to="/admin/login">
             Go to Login
           </NavLink>
         </div>
