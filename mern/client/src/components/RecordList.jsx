@@ -2,33 +2,23 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Agent = (props) => (
-  <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-      {props.agent.name}
-    </td>
-    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-      {props.agent.region}
-    </td>
-    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-      {props.agent.rating}
-    </td>
-    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+  <tr className="table-row">
+    <td className="table-cell">{props.agent.name}</td>
+    <td className="table-cell">{props.agent.region}</td>
+    <td className="table-cell">{props.agent.rating}</td>
+    <td className="table-cell">
       ${typeof props.agent.fees === 'number' ? props.agent.fees.toFixed(2) : props.agent.fees}
     </td>
-    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+    <td className="table-cell">
       ${typeof props.agent.sales === 'number' ? props.agent.sales.toFixed(2) : props.agent.sales}
     </td>
-    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-      <div className="flex gap-2">
-        <Link
-          className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 h-9 rounded-md px-3"
-          to={`/admin/edit/${props.agent._id}`}
-        >
+    <td className="table-cell">
+      <div className="table-actions">
+        <Link className="btn btn-outline btn-sm" to={`/admin/edit/${props.agent._id}`}>
           Edit
         </Link>
         <button
-          className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 hover:text-accent-foreground h-9 rounded-md px-3"
-          color="red"
+          className="btn btn-danger btn-sm"
           type="button"
           onClick={() => {
             props.deleteAgent(props.agent._id);
@@ -83,37 +73,30 @@ export default function RecordList() {
 
   // This following section will display the table with the agents.
   return (
-    <>
-      <h3 className="text-lg font-semibold p-4">Agents</h3>
-      <div className="border rounded-lg overflow-hidden">
-        <div className="relative w-full overflow-auto">
-          <table className="w-full caption-bottom text-sm">
-            <thead className="[&_tr]:border-b">
-              <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
-                  Name
-                </th>
-                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
-                  Region
-                </th>
-                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
-                  Rating
-                </th>
-                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
-                  Fees
-                </th>
-                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
-                  Sales
-                </th>
-                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
-                  Action
-                </th>
+    <section className="page-card">
+      <header className="page-header">
+        <div>
+          <p className="page-kicker">Agent Directory</p>
+          <h3 className="page-title">Agents</h3>
+        </div>
+      </header>
+      <div className="table-shell">
+        <div className="table-scroll">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th className="table-head">Name</th>
+                <th className="table-head">Region</th>
+                <th className="table-head">Rating</th>
+                <th className="table-head">Fees</th>
+                <th className="table-head">Sales</th>
+                <th className="table-head">Action</th>
               </tr>
             </thead>
-            <tbody className="[&_tr:last-child]:border-0">{agentList()}</tbody>
+            <tbody>{agentList()}</tbody>
           </table>
         </div>
       </div>
-    </>
+    </section>
   );
 }

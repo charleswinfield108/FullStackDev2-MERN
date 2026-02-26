@@ -45,6 +45,11 @@ export default function Login() {
 
   return (
     <section className="login-page">
+      <img
+        alt="Rocket logo"
+        className="login-logo"
+        src={`${import.meta.env.BASE_URL}assets/rocketLogo.png`}
+      />
       <div className="login-orb login-orb--one" aria-hidden="true" />
       <div className="login-orb login-orb--two" aria-hidden="true" />
       <div className="login-orb login-orb--three" aria-hidden="true" />

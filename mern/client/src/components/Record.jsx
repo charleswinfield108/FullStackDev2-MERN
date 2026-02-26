@@ -84,149 +84,103 @@ export default function Record() {
 
   // This following section will display the form that takes the input from the user.
   return (
-    <>
-      <h3 className="text-lg font-semibold p-4">
-        Create/Update Agent
-      </h3>
-      <form
-        onSubmit={onSubmit}
-        className="border rounded-lg overflow-hidden p-4"
-      >
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-slate-900/10 pb-12 md:grid-cols-2">
-          <div>
-            <h2 className="text-base font-semibold leading-7 text-slate-900">
-              Agent Info
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-slate-600">
-              This information will be displayed publicly so be careful what you
-              share.
-            </p>
-          </div>
-
-          <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 ">
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium leading-6 text-slate-900"
-              >
-                Name
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    placeholder="John Doe"
-                    value={form.name}
-                    onChange={(e) => updateForm({ name: e.target.value })}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="region"
-                className="block text-sm font-medium leading-6 text-slate-900"
-              >
-                Region
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                  <select
-                    name="region"
-                    id="region"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-slate-900 focus:ring-0 sm:text-sm sm:leading-6"
-                    value={form.region}
-                    onChange={(e) => updateForm({ region: e.target.value })}
-                  >
-                    <option value="">Select a region</option>
-                    <option value="North">North</option>
-                    <option value="South">South</option>
-                    <option value="East">East</option>
-                    <option value="West">West</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="rating"
-                className="block text-sm font-medium leading-6 text-slate-900"
-              >
-                Rating (0-5)
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                  <input
-                    type="number"
-                    name="rating"
-                    id="rating"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    placeholder="4.5"
-                    min="0"
-                    max="5"
-                    step="0.1"
-                    value={form.rating}
-                    onChange={(e) => updateForm({ rating: parseFloat(e.target.value) || '' })}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="fees"
-                className="block text-sm font-medium leading-6 text-slate-900"
-              >
-                Fees ($)
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                  <input
-                    type="number"
-                    name="fees"
-                    id="fees"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    placeholder="5000.00"
-                    step="0.01"
-                    value={form.fees}
-                    onChange={(e) => updateForm({ fees: Math.round(parseFloat(e.target.value) * 100) / 100 || '' })}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="sales"
-                className="block text-sm font-medium leading-6 text-slate-900"
-              >
-                Sales ($)
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                  <input
-                    type="number"
-                    name="sales"
-                    id="sales"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    placeholder="50000.00"
-                    step="0.01"
-                    value={form.sales}
-                    onChange={(e) => updateForm({ sales: Math.round(parseFloat(e.target.value) * 100) / 100 || '' })}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+    <section className="page-card">
+      <header className="page-header">
+        <div>
+          <p className="page-kicker">Agent Console</p>
+          <h3 className="page-title">Create / Update Agent</h3>
+          <p className="page-subtitle">
+            This information will be displayed publicly so be careful what you share.
+          </p>
         </div>
-        <input
-          type="submit"
-          value="Save Agent"
-          className="inline-flex items-center justify-center whitespace-nowrap text-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 hover:text-accent-foreground h-9 rounded-md px-3 cursor-pointer mt-4"
-        />
+      </header>
+      <form onSubmit={onSubmit} className="form-shell">
+        <div className="form-grid">
+          <label className="form-field" htmlFor="name">
+            <span className="form-label">Name</span>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              className="form-input"
+              placeholder="John Doe"
+              value={form.name}
+              onChange={(e) => updateForm({ name: e.target.value })}
+            />
+          </label>
+
+          <label className="form-field" htmlFor="region">
+            <span className="form-label">Region</span>
+            <select
+              name="region"
+              id="region"
+              className="form-select"
+              value={form.region}
+              onChange={(e) => updateForm({ region: e.target.value })}
+            >
+              <option value="">Select a region</option>
+              <option value="North">North</option>
+              <option value="South">South</option>
+              <option value="East">East</option>
+              <option value="West">West</option>
+            </select>
+          </label>
+
+          <label className="form-field" htmlFor="rating">
+            <span className="form-label">Rating (0-5)</span>
+            <input
+              type="number"
+              name="rating"
+              id="rating"
+              className="form-input"
+              placeholder="4.5"
+              min="0"
+              max="5"
+              step="0.1"
+              value={form.rating}
+              onChange={(e) => updateForm({ rating: parseFloat(e.target.value) || '' })}
+            />
+          </label>
+
+          <label className="form-field" htmlFor="fees">
+            <span className="form-label">Fees ($)</span>
+            <input
+              type="number"
+              name="fees"
+              id="fees"
+              className="form-input"
+              placeholder="5000.00"
+              step="0.01"
+              value={form.fees}
+              onChange={(e) =>
+                updateForm({ fees: Math.round(parseFloat(e.target.value) * 100) / 100 || '' })
+              }
+            />
+          </label>
+
+          <label className="form-field" htmlFor="sales">
+            <span className="form-label">Sales ($)</span>
+            <input
+              type="number"
+              name="sales"
+              id="sales"
+              className="form-input"
+              placeholder="50000.00"
+              step="0.01"
+              value={form.sales}
+              onChange={(e) =>
+                updateForm({ sales: Math.round(parseFloat(e.target.value) * 100) / 100 || '' })
+              }
+            />
+          </label>
+        </div>
+        <div className="form-actions">
+          <button className="btn btn-primary" type="submit">
+            Save Agent
+          </button>
+        </div>
       </form>
-    </>
+    </section>
   );
 }
 
