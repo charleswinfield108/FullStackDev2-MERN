@@ -11,7 +11,7 @@ import './index.css';
 
 const StaticLandingRedirect = () => {
   React.useEffect(() => {
-    window.location.replace('/Rocket-Elevators-Website/index.html');
+    window.location.replace('/index.html');
   }, []);
 
   return null;
