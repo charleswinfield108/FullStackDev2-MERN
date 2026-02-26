@@ -1,0 +1,74 @@
+/* Import Google Fonts: Roboto Serif and Roboto */
+@import url('https://fonts.googleapis.com/css?family=Roboto+Serif:400,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+
+/* Set Roboto as the default sans-serif font for all text */
+body, html {
+    font-family: 'Roboto', Arial, Helvetica, sans-serif !important;
+}
+
+/* Use Roboto Serif for all heading tags and set heading color */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto Serif', serif !important;
+    color: #0a65a0 !important;
+}
+
+/* Style news section headings and links */
+#news .img-hover.img-crop h4,
+#news .img-hover.img-crop h4 a {
+    color: #0a65a0 !important;
+}
+
+/* Add horizontal padding to portfolio item boxes */
+#portfolio .item-box {
+    padding-left: 15px;
+    padding-right: 15px;
+    /* No margin-bottom change */
+}
+
+/* Add horizontal margin to portfolio images */
+#portfolio .img-fluid {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+/* Style footer with a gradient background and white text */
+footer {
+    background: linear-gradient(180deg, #a94545 0%, #0a65a0 100%) !important;
+    color: #fff !important;
+}
+
+/* Ensure all footer text and links are white */
+footer a,
+footer p,
+footer li,
+footer h1, footer h2, footer h3, footer h4, footer h5, footer h6,
+footer span, footer div, footer small {
+    color: #fff !important;
+}
+
+/* Overlay with semi-transparent blue for dark-2 class */
+.overlay.dark-2 {
+    background-color: rgba(10, 101, 160, 0.5) !important;
+}
+
+/* Set page header strong text to white */
+.page-header h1 strong {
+    color: #fff !important;
+}
+
+/* Set h3 headings in text-center and quote-header to white */
+.text-center h3,
+h3.text-center,
+.text-center > h3 {
+    color: #fff !important;
+}
+
+.quote-header h3 {
+    color: #fff !important;
+}
+
+/* Set pricing section headings to white */
+h3.pricing, .pricing h3 {
+    color: #fff !important;
+}
