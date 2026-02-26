@@ -29,7 +29,7 @@ export default function Navbar() {
           <NavLink className="btn btn-outline" to="/admin/login">
             Login
           </NavLink>
-        )}}
+        )}
         <NavLink className="btn btn-primary" to="/admin/create">
           Create Agent
         </NavLink>
