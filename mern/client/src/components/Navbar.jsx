@@ -16,9 +16,8 @@ export default function Navbar() {
         <img
           alt="Rocket logo"
           className="nav-logo"
-          src={`${import.meta.env.BASE_URL}assets/rocketLogo.png`}
+          src="/admin/assets/rocketLogo.png"
         />
-        
       </NavLink>
 
       <div className="nav-actions">
