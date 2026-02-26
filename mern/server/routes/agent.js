@@ -30,15 +30,15 @@ router.get("/:id", async (req, res) => {
 
 // Create new agent
 router.post("/", async (req, res) => {
-  const { name, region, rating, fees, sales } = req.body;
+  const { first_name, last_name, region, rating, fees, sales } = req.body;
 
   // Validate required fields
-  if (!name || !region || rating === undefined || fees === undefined || sales === undefined) {
+  if (!first_name || !last_name || !region || rating === undefined || fees === undefined || sales === undefined) {
     return res.status(400).send("All fields are required");
   }
 
   try {
-    const agent = new Agent({ name, region, rating, fees, sales });
+    const agent = new Agent({ first_name, last_name, region, rating, fees, sales });
     const result = await agent.save();
     res.status(201).json(result);
   } catch (error) {
@@ -49,12 +49,12 @@ router.post("/", async (req, res) => {
 
 // Update agent
 router.patch("/:id", async (req, res) => {
-  const { name, region, rating, fees, sales } = req.body;
+  const { first_name, last_name, region, rating, fees, sales } = req.body;
 
   try {
     const agent = await Agent.findByIdAndUpdate(
       req.params.id,
-      { name, region, rating, fees, sales },
+      { first_name, last_name, region, rating, fees, sales },
       { new: true, runValidators: true }
     );
 
@@ -65,7 +65,7 @@ router.patch("/:id", async (req, res) => {
     res.json(agent);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error updating agent");
+    res.status(500).json({ error: "Error updating agent" });
   }
 });
 

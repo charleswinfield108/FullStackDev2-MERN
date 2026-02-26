@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Agent = (props) => (
   <tr className="table-row">
-    <td className="table-cell">{props.agent.name}</td>
+    <td className="table-cell">{props.agent.first_name} {props.agent.last_name}</td>
     <td className="table-cell">{props.agent.region}</td>
     <td className="table-cell">{props.agent.rating}</td>
     <td className="table-cell">

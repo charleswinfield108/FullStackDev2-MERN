@@ -152,7 +152,7 @@ Create a `config.env` file in the `mern/server` directory:
 
 ```env
 ATLAS_URI=your_mongodb_connection_string
-PORT=5050
+PORT=3000
 JWT_SECRET=your_jwt_secret_key
 ```
 
@@ -165,7 +165,7 @@ JWT_SECRET=your_jwt_secret_key
 cd mern/server
 npm start
 ```
-Server runs on `http://localhost:5050`
+Server runs on `http://localhost:3000`
 
 **Terminal 2 - Start the frontend client:**
 ```bash

@@ -1,7 +1,11 @@
 import mongoose from 'mongoose';
 
 const agentSchema = new mongoose.Schema({
-  name: {
+  first_name: {
+    type: String,
+    required: true,
+  },
+  last_name: {
     type: String,
     required: true,
   },
@@ -13,7 +17,7 @@ const agentSchema = new mongoose.Schema({
     type: Number,
     required: true,
     min: 0,
-    max: 5,
+    max: 100,
   },
   fees: {
     type: Number,
