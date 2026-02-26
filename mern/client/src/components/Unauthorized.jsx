@@ -3,6 +3,11 @@ import { NavLink } from 'react-router-dom';
 export default function Unauthorized() {
   return (
     <section className="login-page">
+      <img
+        alt="Rocket logo"
+        className="login-logo"
+        src="/assets/rocketLogo.png"
+      />
       <div className="login-orb login-orb--one" aria-hidden="true" />
       <div className="login-orb login-orb--two" aria-hidden="true" />
       <div className="login-orb login-orb--three" aria-hidden="true" />
@@ -27,7 +32,7 @@ export default function Unauthorized() {
           <p className="login-subtitle">
             Your account was not recognized or your session expired.
           </p>
-          <NavLink className="login-button" to="/admin/login">
+          <NavLink className="login-button" to="/login">
             Go to Login
           </NavLink>
         </div>

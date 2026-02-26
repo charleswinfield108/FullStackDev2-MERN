@@ -7,7 +7,7 @@ export default function Navbar() {
   function handleLogout() {
     localStorage.removeItem('authToken');
     sessionStorage.removeItem('authToken');
-    navigate('/admin/login');
+    navigate('/login');
   }
 
   return (
@@ -16,7 +16,7 @@ export default function Navbar() {
         <img
           alt="Rocket logo"
           className="nav-logo"
-          src="/admin/assets/rocketLogo.png"
+          src="/assets/rocketLogo.png"
         />
       </NavLink>
 
@@ -26,7 +26,7 @@ export default function Navbar() {
             Logout
           </button>
         ) : (
-          <NavLink className="btn btn-outline" to="/admin/login">
+          <NavLink className="btn btn-outline" to="/login">
             Login
           </NavLink>
         )}

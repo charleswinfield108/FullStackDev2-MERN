@@ -9,7 +9,19 @@ import Record from './components/Record';
 import RecordList from './components/RecordList';
 import './index.css';
 
+const StaticLandingRedirect = () => {
+  React.useEffect(() => {
+    window.location.replace('/Rocket-Elevators-Website/index.html');
+  }, []);
+
+  return null;
+};
+
 const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <StaticLandingRedirect />,
+  },
   {
     path: '/admin',
     element: (
@@ -33,7 +45,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/admin/login',
+    path: '/login',
     element: <Login />,
   },
   {
