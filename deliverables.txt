@@ -1,12 +1,12 @@
 Charles Winfield Module 7 Deliverables
 
-GitHub Link:
+GitHub Link: git@github.com:charleswinfield108/FullStackDev2-MERN.git
 
 
-YouTube Link:
+YouTube Link: https://www.youtube.com/watch?v=XNLTKeDP7Mw
 
 
 
 Acessing the Project:
-Login:
-Password:
+Login: admin@admin.com
+Password: !1Qaz!1Qaz

@@ -1,24 +1,32 @@
+// Login Component - Handles admin user authentication
+// This component provides a login form for Rocket Elevators agents to access the admin console
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Login() {
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const redirectTo = location.state?.from?.pathname || '/admin';
+  // State management
+  const [form, setForm] = useState({ email: '', password: '' }); // Form input values
+  const [error, setError] = useState(''); // Error message display
+  const [isLoading, setIsLoading] = useState(false); // Loading state during authentication
+  
+  // Router hooks
+  const navigate = useNavigate(); // Navigate to different routes
+  const location = useLocation(); // Get current location and previous page info
+  const redirectTo = location.state?.from?.pathname || '/admin'; // Redirect to previous page or dashboard
 
+  // Updates form fields when user types
   function updateForm(value) {
     setForm((prev) => ({ ...prev, ...value }));
   }
 
+  // Handles form submission - authenticates user with backend
   async function onSubmit(event) {
     event.preventDefault();
-    setError('');
-    setIsLoading(true);
+    setError(''); // Clear previous errors
+    setIsLoading(true); // Show loading state
 
     try {
+      // Send login credentials to backend
       const response = await fetch('/auth/login', {
         method: 'POST',
         headers: {
@@ -27,19 +35,21 @@ export default function Login() {
         body: JSON.stringify(form),
       });
 
+      // Handle authentication failure
       if (!response.ok) {
         navigate('/admin/unauthorized', { replace: true });
         return;
       }
 
+      // Handle successful authentication
       const data = await response.json();
-      localStorage.removeItem('authToken');
-      sessionStorage.setItem('authToken', data.token);
-      navigate(redirectTo, { replace: true });
+      localStorage.removeItem('authToken'); // Clear any old tokens
+      sessionStorage.setItem('authToken', data.token); // Store new token for this session
+      navigate(redirectTo, { replace: true }); // Redirect to dashboard or previous page
     } catch (err) {
-      setError(err.message || 'Login failed');
+      setError(err.message || 'Login failed'); // Display error to user
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Clear loading state
     }
   }
 

@@ -1,6 +1,9 @@
+// RecordList Component - Displays all agents in a table
+// Allows users to view, edit, and delete agent records
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+// Agent Row Component - Renders a single agent as a table row
 const Agent = (props) => (
   <tr className="table-row">
     <td className="table-cell">{props.agent.first_name} {props.agent.last_name}</td>
@@ -32,33 +35,39 @@ const Agent = (props) => (
 );
 
 export default function RecordList() {
+  // State to store list of agents fetched from database
   const [agents, setAgents] = useState([]);
 
-  // This method fetches the agents from the database.
+  // Fetch agents from database when component loads
   useEffect(() => {
     async function getAgents() {
-      const response = await fetch(`/agent/`);
-      if (!response.ok) {
-        const message = `An error occurred: ${response.statusText}`;
-        console.error(message);
-        return;
+      try {
+        const response = await fetch(`/agent/`); // Fetch all agents from backend
+        if (!response.ok) {
+          const message = `An error occurred: ${response.statusText}`;
+          console.error(message);
+          return;
+        }
+        const agents = await response.json();
+        setAgents(agents); // Update state with fetched agents
+      } catch (error) {
+        console.error('Failed to fetch agents:', error);
       }
-      const agents = await response.json();
-      setAgents(agents);
     }
     getAgents();
-  }, []);
+  }, []); // Empty dependency array means fetch only once on mount
 
-  // This method will delete an agent
+  // Deletes an agent from database and updates the UI
   async function deleteAgent(id) {
     await fetch(`/agent/${id}`, {
-      method: 'DELETE',
+      method: 'DELETE', // Send DELETE request to backend
     });
+    // Remove deleted agent from UI
     const newAgents = agents.filter((el) => el._id !== id);
     setAgents(newAgents);
   }
 
-  // This method will map out the agents on the table
+  // Maps agents array to Agent row components
   function agentList() {
     return agents.map((agent) => {
       return (

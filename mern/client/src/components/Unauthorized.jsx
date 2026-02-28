@@ -1,3 +1,5 @@
+// Unauthorized Component - Error page for denied access
+// Displayed when login fails or session expires
 import { NavLink } from 'react-router-dom';
 
 export default function Unauthorized() {
