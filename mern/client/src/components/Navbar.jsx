@@ -1,7 +1,8 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const token = sessionStorage.getItem('authToken');
 
   function handleLogout() {
@@ -12,7 +13,7 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      <NavLink className="nav-brand" to="/admin">
+      <NavLink className="nav-brand" to="/admin/home">
         <img
           alt="Rocket logo"
           className="nav-logo"
@@ -30,9 +31,11 @@ export default function Navbar() {
             Login
           </NavLink>
         )}
-        <NavLink className="btn btn-primary" to="/admin/create">
-          Create Agent
-        </NavLink>
+        {location.pathname !== '/admin/home' && location.pathname !== '/admin/transaction' && location.pathname !== '/admin/report' && (
+          <NavLink className="btn btn-primary" to="/admin/create">
+            Create Agent
+          </NavLink>
+        )}
       </div>
     </nav>
   );

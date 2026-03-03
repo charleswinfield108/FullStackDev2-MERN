@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Modal, Button, Toast, ToastContainer } from 'react-bootstrap';
 
 export default function Record() {
   const [form, setForm] = useState({
@@ -14,6 +15,10 @@ export default function Record() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
   const params = useParams();
   const navigate = useNavigate();
 
@@ -58,25 +63,35 @@ export default function Record() {
     });
   }
 
-  // This function will handle the submission.
-  async function onSubmit(e) {
+  // Show confirmation modal when user clicks Save Agent
+  function handleFormSubmit(e) {
     e.preventDefault();
     setError('');
-    setSuccess('');
+
+    // Validate required fields before showing modal
+    if (!form.first_name || !form.last_name || !form.region || form.rating === '' || form.fees === '' || form.sales === '') {
+      setError('All fields are required');
+      return;
+    }
+
+    // Validate numeric ranges
+    const rating = parseFloat(form.rating);
+    if (isNaN(rating) || rating < 0 || rating > 100) {
+      setError('Rating must be between 0 and 100');
+      return;
+    }
+
+    // All validations passed, show confirmation modal
+    setShowModal(true);
+  }
+
+  // Handle confirmation - actually submit the form
+  async function handleConfirm() {
+    setShowModal(false);
     setIsLoading(true);
+    setError('');
 
     try {
-      // Validate required fields
-      if (!form.first_name || !form.last_name || !form.region || form.rating === '' || form.fees === '' || form.sales === '') {
-        throw new Error('All fields are required');
-      }
-
-      // Validate numeric ranges
-      const rating = parseFloat(form.rating);
-      if (isNaN(rating) || rating < 0 || rating > 100) {
-        throw new Error('Rating must be between 0 and 100');
-      }
-
       const agent = { ...form };
       let response;
 
@@ -117,26 +132,97 @@ export default function Record() {
         throw new Error(errorMessage);
       }
 
-      // Success case - only clear form and navigate on successful response
-      const successMessage = isNew ? 'Agent created successfully!' : 'Agent updated successfully!';
-      setSuccess(successMessage);
-      setForm({ first_name: '', last_name: '', region: '', rating: '', fees: '', sales: '' });
-      
-      // Navigate after a brief delay to allow user to see success message
-      setTimeout(() => {
-        navigate('/admin');
-      }, 1500);
+      // Success case - show success toast and navigate
+      if (isNew) {
+        setToastMessage('Agent was added successfully.');
+        setShowSuccessToast(true);
+        setForm({ first_name: '', last_name: '', region: '', rating: '', fees: '', sales: '' });
+        
+        // Navigate after a brief delay to allow user to see success message
+        setTimeout(() => {
+          navigate('/admin/list');
+        }, 1500);
+      } else {
+        setToastMessage('Agent Updated Successfully.');
+        setShowSuccessToast(true);
+        setTimeout(() => {
+          navigate('/admin/list');
+        }, 1500);
+      }
     } catch (error) {
       console.error('A problem occurred:', error);
       setError(error.message || 'An error occurred while saving the agent');
+      
+      // Set the message first, then show the toast
+      if (isNew) {
+        setToastMessage('Agent Not Created Successfully.');
+      } else {
+        setToastMessage('Agent Not Updated Successfully.');
+      }
+      setShowErrorToast(true);
     } finally {
       setIsLoading(false);
     }
   }
 
+  // Handle cancel - close modal and show error toast
+  function handleCancel() {
+    setShowModal(false);
+    if (isNew) {
+      setToastMessage('Agent Not Created Successfully.');
+    } else {
+      setToastMessage('Agent Not Updated Successfully.');
+    }
+    setShowErrorToast(true);
+  }
+
   // This following section will display the form that takes the input from the user.
   return (
-    <section className="page-card">
+    <>
+      <ToastContainer position="middle-center" className="p-3">
+        <Toast 
+          onClose={() => setShowSuccessToast(false)} 
+          show={showSuccessToast} 
+          delay={3000} 
+          autohide
+          bg="success"
+        >
+          <Toast.Body className="text-white fw-bold">
+            {toastMessage}
+          </Toast.Body>
+        </Toast>
+
+        <Toast 
+          onClose={() => setShowErrorToast(false)} 
+          show={showErrorToast} 
+          delay={3000} 
+          autohide
+          bg="danger"
+        >
+          <Toast.Body className="text-white fw-bold">
+            {toastMessage}
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Agent {isNew ? 'Creation' : 'Update'}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {isNew ? 'Are you sure that you are ready to add this agent to your list?' : 'Are you satisfied with the update you made for this agent?'}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCancel}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleConfirm} disabled={isLoading}>
+            {isLoading ? 'Saving...' : 'Confirm'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <section className="page-card">
       <header className="page-header">
         <div>
           <p className="page-kicker">Agent Console</p>
@@ -148,7 +234,7 @@ export default function Record() {
       </header>
       {error && <div className="alert alert-error">{error}</div>}
       {success && <div className="alert alert-success">{success}</div>}
-      <form onSubmit={onSubmit} className="form-shell">
+      <form onSubmit={handleFormSubmit} className="form-shell">
         <div className="form-grid">
           <label className="form-field" htmlFor="first_name">
             <span className="form-label">First Name</span>
@@ -249,9 +335,17 @@ export default function Record() {
           >
             {isLoading ? 'Saving...' : 'Save Agent'}
           </button>
+          <button 
+            className="btn btn-outline ms-3" 
+            type="button"
+            onClick={() => navigate('/admin/list')}
+          >
+            Cancel
+          </button>
         </div>
       </form>
     </section>
+    </>
   );
 }
 
