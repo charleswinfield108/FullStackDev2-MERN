@@ -1,0 +1,34 @@
+.report-container {
+  padding: 20px 0;
+}
+
+.chart-section {
+  margin-bottom: 30px;
+}
+
+.chart-card {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.chart-card h3 {
+  color: #333;
+  font-weight: 600;
+  font-size: 1.3rem;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .chart-card {
+    padding: 20px;
+  }
+
+  .chart-card h3 {
+    font-size: 1.1rem;
+  }
+}

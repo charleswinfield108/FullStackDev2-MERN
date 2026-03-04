@@ -23,6 +23,14 @@ export default defineConfig({
         target: 'http://localhost:3000',
         changeOrigin: true,
       },
+      '/transaction': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/report': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
     },
   },
 })
