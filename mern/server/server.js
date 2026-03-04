@@ -6,6 +6,7 @@ import { fileURLToPath } from "url"; // Get current file path in ES modules
 import { connectDB } from "./db/connection.js"; // Database connection
 import auth from "./routes/auth.js"; // Authentication routes
 import agent from "./routes/agent.js"; // Agent CRUD routes
+import session from "./routes/sessionRoutes.js"; // Session routes
 
 // Set the port from environment variable or default to 5050
 const PORT = process.env.PORT || 5050;
@@ -25,6 +26,7 @@ app.use(express.json()); // Parse JSON request bodies
 // Mount API routes
 app.use("/auth", auth); // Authentication endpoints: POST /auth/login
 app.use("/agent", agent); // Agent CRUD endpoints: GET/POST /agent, PATCH/DELETE /agent/:id
+app.use("/session", session); // Session endpoints: POST /session/:user_id, GET /validate_token
     
 // Serve static files
 app.use("/", express.static(publicPath)); // Serve public assets (HTML, CSS, JS) at root

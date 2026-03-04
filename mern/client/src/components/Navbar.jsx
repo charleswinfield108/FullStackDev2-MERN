@@ -1,13 +1,12 @@
-import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const token = sessionStorage.getItem('authToken');
+  const { user, logout } = useAuth();
 
   function handleLogout() {
-    localStorage.removeItem('authToken');
-    sessionStorage.removeItem('authToken');
+    logout(); // Call auth context logout function
     navigate('/admin/login');
   }
 
@@ -22,18 +21,18 @@ export default function Navbar() {
       </NavLink>
 
       <div className="nav-actions">
-        {token ? (
-          <button className="btn btn-outline" type="button" onClick={handleLogout}>
-            Logout
-          </button>
+        {user ? (
+          <>
+            <span style={{ marginRight: '1rem', color: '#666', fontWeight: '500' }}>
+              Welcome, {user.first_name}
+            </span>
+            <button className="btn btn-outline" type="button" onClick={handleLogout}>
+              Logout
+            </button>
+          </>
         ) : (
           <NavLink className="btn btn-outline" to="/admin/login">
             Login
-          </NavLink>
-        )}
-        {location.pathname !== '/admin/home' && location.pathname !== '/admin/transaction' && location.pathname !== '/admin/report' && (
-          <NavLink className="btn btn-primary" to="/admin/create">
-            Create Agent
           </NavLink>
         )}
       </div>

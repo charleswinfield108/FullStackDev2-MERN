@@ -205,6 +205,11 @@ export default function RecordList() {
           <h3 className="page-title">Agents</h3>
         </div>
       </header>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', marginBottom: '1.5rem' }}>
+        <Link className="btn btn-primary" to="/admin/create">
+          Create Agent
+        </Link>
+      </div>
       <div className="table-shell">
         <div className="table-scroll">
           <table className="data-table">
