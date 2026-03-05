@@ -27,7 +27,7 @@ body {
 	margin: 0;
 	font-family: "Roboto", "Helvetica Neue", sans-serif;
 	color: var(--ink);
-	background: radial-gradient(1200px 600px at 15% 0%, #7a7a7a 0%, #666 45%, #414141 100%);
+	background: #f1f2f7;
 }
 
 h1,

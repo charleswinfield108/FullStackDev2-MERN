@@ -1,3 +1,14 @@
 #root {
   min-height: 100vh;
 }
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-container {
+  flex: 1;
+  background-color: #f1f2f7;
+}

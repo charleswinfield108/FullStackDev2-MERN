@@ -1,5 +1,7 @@
 .transaction-container {
   padding: 20px 0;
+  background-color: #f1f2f7;
+  min-height: 100vh;
 }
 
 .transaction-layout {
@@ -21,21 +23,22 @@
 }
 
 .form-card {
-  background-color: #f8f9fa;
+  background-color: #ffffff;
   padding: 25px;
   border-radius: 8px;
-  border: 1px solid #dee2e6;
+  border: 1px solid #e0e0e0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .transaction-list-section table {
+  background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   border-collapse: collapse;
 }
 
 .transaction-list-section table thead {
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #dee2e6;
+  background-color: #f1f2f7;
+  border-bottom: 2px solid #e0e0e0;
 }
 
 .transaction-list-section table tbody tr:hover {
