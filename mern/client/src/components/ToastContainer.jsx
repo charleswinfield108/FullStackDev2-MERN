@@ -32,12 +32,12 @@ export const ToastContainer = () => {
           autohide
           className="app-toast"
         >
-          <Toast.Body className="d-flex align-items-center justify-content-between">
+          <Toast.Body className="d-flex align-items-center justify-content-between text-white">
             <div className="d-flex align-items-center gap-2">
               <span className={`toast-icon toast-icon-${toast.type}`}>
                 {getIcon(toast.type)}
               </span>
-              <span className={toast.type === 'danger' ? 'text-white' : ''}>
+              <span>
                 {toast.message}
               </span>
             </div>
