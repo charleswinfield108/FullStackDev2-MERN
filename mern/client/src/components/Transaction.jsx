@@ -1,22 +1,28 @@
 import { useState, useEffect } from 'react';
-import { Container, Form, Button, Table, Toast, ToastContainer, Row, Col, Modal } from 'react-bootstrap';
+import { useSearchParams } from 'react-router-dom';
+import { Container, Form, Button, Table, Row, Col, Modal, Pagination } from 'react-bootstrap';
+import { useToast } from '../hooks/useToast';
 import './Transaction.css';
 
 export default function Transaction() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = parseInt(searchParams.get('page')) || 1;
+  const { showToast } = useToast();
+  
   const [formData, setFormData] = useState({ amount: '', agent_id: '' });
   const [agents, setAgents] = useState([]);
   const [transactions, setTransactions] = useState([]);
-  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [agentsLoading, setAgentsLoading] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [tentativeFormData, setTentativeFormData] = useState(null);
 
-  // Fetch agents and transactions on component mount
+  // Fetch agents and transactions on component mount and when page changes
   useEffect(() => {
     fetchAgents();
-    fetchTransactions();
-  }, []);
+    fetchTransactions(currentPage);
+  }, [currentPage]);
 
   const fetchAgents = async () => {
     try {
@@ -44,23 +50,20 @@ export default function Transaction() {
     }
   };
 
-  const fetchTransactions = async () => {
+  const fetchTransactions = async (page = 1) => {
     try {
-      const response = await fetch('/transaction/transaction-data');
+      const response = await fetch(`/transaction/transaction-data?page=${page}`);
       if (response.ok) {
         const data = await response.json();
+        console.log('Transaction response:', data);
         if (data.status === 'ok') {
           setTransactions(data.data);
+          setTotalPages(data.totalPages);
         }
       }
     } catch (error) {
       console.error('Error fetching transactions:', error);
     }
-  };
-
-  const showToast = (message, type = 'success') => {
-    setToast({ show: true, message, type });
-    setTimeout(() => setToast({ ...toast, show: false }), 3000);
   };
 
   const handleInputChange = (e) => {
@@ -104,7 +107,8 @@ export default function Transaction() {
         showToast('Transaction Created Successfully', 'success');
         setFormData({ amount: '', agent_id: '' });
         setTentativeFormData(null);
-        fetchTransactions(); // Refresh transaction list
+        setSearchParams({}); // Reset to page 1
+        fetchTransactions(1); // Explicitly fetch page 1
       } else {
         showToast(data.message || 'Error creating transaction', 'danger');
       }
@@ -131,6 +135,12 @@ export default function Transaction() {
     return agent ? `${agent.first_name} ${agent.last_name}` : 'Unknown';
   };
 
+  const goToPage = (pageNum) => {
+    if (pageNum > 0 && pageNum <= totalPages) {
+      setSearchParams({ page: pageNum });
+    }
+  };
+
   return (
     <Container className="transaction-container mt-5">
       <h1 className="mb-5">Transaction Management</h1>
@@ -140,32 +150,60 @@ export default function Transaction() {
         <Col lg={6} className="transaction-list-section mb-4 mb-lg-0">
           <h3 className="mb-4">Recent Transactions</h3>
           {transactions.length > 0 ? (
-            <Table striped bordered hover responsive>
-              <thead>
-                <tr>
-                  <th>Agent Name</th>
-                  <th>Amount</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {transactions.map((transaction) => (
-                  <tr key={transaction._id}>
-                    <td>
-                      {transaction.agent_id ? (
-                        <>
-                          {transaction.agent_id.first_name} {transaction.agent_id.last_name}
-                        </>
-                      ) : (
-                        <span style={{ color: 'blue' }}>Inactive Agent</span>
-                      )}
-                    </td>
-                    <td>${transaction.amount.toFixed(2)}</td>
-                    <td>{formatDate(transaction.createdAt)}</td>
+            <>
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th>Agent Name</th>
+                    <th>Amount</th>
+                    <th>Date</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody>
+                  {transactions.map((transaction) => (
+                    <tr key={transaction._id}>
+                      <td>
+                        {transaction.agent_id ? (
+                          <>
+                            {transaction.agent_id.first_name} {transaction.agent_id.last_name}
+                          </>
+                        ) : (
+                          <span style={{ color: 'blue' }}>Inactive Agent</span>
+                        )}
+                      </td>
+                      <td>${transaction.amount.toFixed(2)}</td>
+                      <td>{formatDate(transaction.createdAt)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+              
+              {totalPages > 1 && (
+                <div className="d-flex justify-content-center mt-4">
+                  <Pagination>
+                    <Pagination.Prev
+                      onClick={() => goToPage(currentPage - 1)}
+                      disabled={currentPage === 1}
+                    />
+                    
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <Pagination.Item
+                        key={page}
+                        active={page === currentPage}
+                        onClick={() => goToPage(page)}
+                      >
+                        {page}
+                      </Pagination.Item>
+                    ))}
+                    
+                    <Pagination.Next
+                      onClick={() => goToPage(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                    />
+                  </Pagination>
+                </div>
+              )}
+            </>
           ) : (
             <p className="text-muted">No transactions yet. Create one to get started!</p>
           )}
@@ -255,21 +293,6 @@ export default function Transaction() {
           </Button>
         </Modal.Footer>
       </Modal>
-
-      {/* Toast Notification */}
-      <ToastContainer position="middle-center">
-        <Toast
-          show={toast.show}
-          bg={toast.type}
-          onClose={() => setToast({ ...toast, show: false })}
-          delay={3000}
-          autohide
-        >
-          <Toast.Body className={toast.type === 'danger' ? 'text-white' : 'text-dark'}>
-            {toast.message}
-          </Toast.Body>
-        </Toast>
-      </ToastContainer>
     </Container>
   );
 }

@@ -55,7 +55,7 @@ router.patch("/:id", async (req, res) => {
     const agent = await Agent.findByIdAndUpdate(
       req.params.id,
       { first_name, last_name, region, rating, fees, sales },
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     );
 
     if (!agent) {

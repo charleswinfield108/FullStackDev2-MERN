@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import { ToastContainer } from './components/ToastContainer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -10,6 +11,7 @@ const App = () => {
       <main className="app-container">
         <Outlet />
       </main>
+      <ToastContainer />
     </div>
   );
 };

@@ -4,17 +4,31 @@ import Agent from '../models/Agent.js';
 
 const router = express.Router();
 
-// GET transaction data - fetch last 10 transactions with agent info
+// GET transaction data - fetch transactions with pagination
 router.get('/transaction-data', async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = 10;
+    const skip = (page - 1) * pageSize;
+
+    // Get total count for pagination
+    const totalTransactions = await Transaction.countDocuments();
+
+    // Fetch paginated transactions
     const transactions = await Transaction.find()
       .populate('agent_id', 'first_name last_name')
       .sort({ createdAt: -1 })
-      .limit(10);
+      .skip(skip)
+      .limit(pageSize);
+
+    const totalPages = Math.ceil(totalTransactions / pageSize);
 
     res.status(200).json({
       status: 'ok',
       data: transactions,
+      totalTransactions,
+      totalPages,
+      currentPage: page,
       message: 'Transactions retrieved successfully',
     });
   } catch (error) {
@@ -70,7 +84,7 @@ router.post('/', async (req, res) => {
     const updatedAgent = await Agent.findByIdAndUpdate(
       agent_id,
       { $inc: { sales: amount } },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     res.status(201).json({

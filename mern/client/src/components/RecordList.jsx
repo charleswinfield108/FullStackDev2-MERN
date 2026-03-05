@@ -2,7 +2,8 @@
 // Allows users to view, edit, and delete agent records
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Modal, Button, Toast, ToastContainer } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
+import { useToast } from '../hooks/useToast';
 
 // Agent Row Component - Renders a single agent as a table row
 const Agent = (props) => (
@@ -39,14 +40,12 @@ const Agent = (props) => (
 
 export default function RecordList() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   // State to store list of agents fetched from database
   const [agents, setAgents] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState(null);
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [showErrorToast, setShowErrorToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
 
   // Fetch agents from database when component loads
   useEffect(() => {
@@ -100,12 +99,10 @@ export default function RecordList() {
       // Remove deleted agent from UI
       const newAgents = agents.filter((el) => el._id !== selectedAgent._id);
       setAgents(newAgents);
-      setToastMessage('Agent deleted successfully.');
-      setShowSuccessToast(true);
+      showToast('Agent deleted successfully.', 'success');
     } catch (error) {
       console.error('Delete error:', error);
-      setToastMessage('Agent Not Deleted Successfully.');
-      setShowErrorToast(true);
+      showToast('Agent Not Deleted Successfully.', 'danger');
     }
   }
 
@@ -138,32 +135,6 @@ export default function RecordList() {
   // This following section will display the table with the agents.
   return (
     <>
-      <ToastContainer position="middle-center" className="p-3">
-        <Toast 
-          onClose={() => setShowSuccessToast(false)} 
-          show={showSuccessToast} 
-          delay={3000} 
-          autohide
-          bg="success"
-        >
-          <Toast.Body className="text-white fw-bold">
-            {toastMessage}
-          </Toast.Body>
-        </Toast>
-
-        <Toast 
-          onClose={() => setShowErrorToast(false)} 
-          show={showErrorToast} 
-          delay={3000} 
-          autohide
-          bg="danger"
-        >
-          <Toast.Body className="text-white fw-bold">
-            {toastMessage}
-          </Toast.Body>
-        </Toast>
-      </ToastContainer>
-
       <Modal show={showEditModal} onHide={handleCancelEdit} centered>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Edit</Modal.Title>

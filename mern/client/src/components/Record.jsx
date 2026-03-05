@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Modal, Button, Toast, ToastContainer } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
+import { useToast } from '../hooks/useToast';
 
 export default function Record() {
+  const { showToast } = useToast();
   const [form, setForm] = useState({
     first_name: '',
     last_name: '',
@@ -16,9 +18,6 @@ export default function Record() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [showErrorToast, setShowErrorToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
   const params = useParams();
   const navigate = useNavigate();
 
@@ -134,8 +133,7 @@ export default function Record() {
 
       // Success case - show success toast and navigate
       if (isNew) {
-        setToastMessage('Agent was added successfully.');
-        setShowSuccessToast(true);
+        showToast('Agent was added successfully.', 'success');
         setForm({ first_name: '', last_name: '', region: '', rating: '', fees: '', sales: '' });
         
         // Navigate after a brief delay to allow user to see success message
@@ -143,8 +141,7 @@ export default function Record() {
           navigate('/admin/list');
         }, 1500);
       } else {
-        setToastMessage('Agent Updated Successfully.');
-        setShowSuccessToast(true);
+        showToast('Agent Updated Successfully.', 'success');
         setTimeout(() => {
           navigate('/admin/list');
         }, 1500);
@@ -153,13 +150,12 @@ export default function Record() {
       console.error('A problem occurred:', error);
       setError(error.message || 'An error occurred while saving the agent');
       
-      // Set the message first, then show the toast
+      // Show error toast
       if (isNew) {
-        setToastMessage('Agent Not Created Successfully.');
+        showToast('Agent Not Created Successfully.', 'danger');
       } else {
-        setToastMessage('Agent Not Updated Successfully.');
+        showToast('Agent Not Updated Successfully.', 'danger');
       }
-      setShowErrorToast(true);
     } finally {
       setIsLoading(false);
     }
@@ -169,42 +165,15 @@ export default function Record() {
   function handleCancel() {
     setShowModal(false);
     if (isNew) {
-      setToastMessage('Agent Not Created Successfully.');
+      showToast('Agent Not Created Successfully.', 'danger');
     } else {
-      setToastMessage('Agent Not Updated Successfully.');
+      showToast('Agent Not Updated Successfully.', 'danger');
     }
-    setShowErrorToast(true);
   }
 
   // This following section will display the form that takes the input from the user.
   return (
     <>
-      <ToastContainer position="middle-center" className="p-3">
-        <Toast 
-          onClose={() => setShowSuccessToast(false)} 
-          show={showSuccessToast} 
-          delay={3000} 
-          autohide
-          bg="success"
-        >
-          <Toast.Body className="text-white fw-bold">
-            {toastMessage}
-          </Toast.Body>
-        </Toast>
-
-        <Toast 
-          onClose={() => setShowErrorToast(false)} 
-          show={showErrorToast} 
-          delay={3000} 
-          autohide
-          bg="danger"
-        >
-          <Toast.Body className="text-white fw-bold">
-            {toastMessage}
-          </Toast.Body>
-        </Toast>
-      </ToastContainer>
-
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Agent {isNew ? 'Creation' : 'Update'}</Modal.Title>
