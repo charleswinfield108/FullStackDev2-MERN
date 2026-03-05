@@ -1,18 +1,22 @@
 // Login Component - Handles admin user authentication
 // This component provides a login form for Rocket Elevators agents to access the admin console
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Toast, ToastContainer } from 'react-bootstrap';
+import { setSessionToken } from '../utils/cookieUtils';
+import { useAuth } from '../hooks/useAuth';
 
 export default function Login() {
   // State management
   const [form, setForm] = useState({ email: '', password: '' }); // Form input values
   const [error, setError] = useState(''); // Error message display
   const [isLoading, setIsLoading] = useState(false); // Loading state during authentication
+  const [showSuccessToast, setShowSuccessToast] = useState(false); // Success toast visibility
+  const [showErrorToast, setShowErrorToast] = useState(false); // Error toast visibility
   
-  // Router hooks
+  // Router and auth hooks
   const navigate = useNavigate(); // Navigate to different routes
-  const location = useLocation(); // Get current location and previous page info
-  const redirectTo = location.state?.from?.pathname || '/admin'; // Redirect to previous page or dashboard
+  const { login } = useAuth(); // Auth context function to set user data
 
   // Updates form fields when user types
   function updateForm(value) {
@@ -23,6 +27,7 @@ export default function Login() {
   async function onSubmit(event) {
     event.preventDefault();
     setError(''); // Clear previous errors
+    setShowErrorToast(false); // Hide error toast
     setIsLoading(true); // Show loading state
 
     try {
@@ -37,24 +42,80 @@ export default function Login() {
 
       // Handle authentication failure
       if (!response.ok) {
-        navigate('/admin/unauthorized', { replace: true });
+        setShowErrorToast(true); // Show error toast
+        setIsLoading(false); // Clear loading state
         return;
       }
 
       // Handle successful authentication
       const data = await response.json();
-      localStorage.removeItem('authToken'); // Clear any old tokens
-      sessionStorage.setItem('authToken', data.token); // Store new token for this session
-      navigate(redirectTo, { replace: true }); // Redirect to dashboard or previous page
+      const { user_id, first_name, last_name } = data;
+
+      // Create session with user_id
+      const sessionResponse = await fetch(`/session/${user_id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!sessionResponse.ok) {
+        throw new Error('Failed to create session');
+      }
+
+      const sessionData = await sessionResponse.json();
+      
+      // Save session token to cookies
+      setSessionToken(sessionData.data.token);
+      
+      // Update auth context with user data
+      login({
+        id: user_id,
+        first_name,
+        last_name,
+      });
+
+      setShowSuccessToast(true); // Show success toast
+      
+      // Redirect after a brief delay to show the toast
+      setTimeout(() => {
+        navigate('/admin/home', { replace: true }); // Redirect to dashboard
+      }, 1500);
     } catch (err) {
       setError(err.message || 'Login failed'); // Display error to user
-    } finally {
+      setShowErrorToast(true); // Show error toast
       setIsLoading(false); // Clear loading state
     }
   }
 
   return (
     <section className="login-page">
+      <ToastContainer position="middle-center" className="p-3">
+        <Toast 
+          onClose={() => setShowSuccessToast(false)} 
+          show={showSuccessToast} 
+          delay={3000} 
+          autohide
+          bg="success"
+        >
+          <Toast.Body className="text-white fw-bold">
+            Login was Successful.
+          </Toast.Body>
+        </Toast>
+
+        <Toast 
+          onClose={() => setShowErrorToast(false)} 
+          show={showErrorToast} 
+          delay={3000} 
+          autohide
+          bg="danger"
+        >
+          <Toast.Body className="text-white fw-bold">
+            Incorrect Username or Password
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
+
       <img
         alt="Rocket logo"
         className="login-logo"

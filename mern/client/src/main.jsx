@@ -9,6 +9,10 @@ import RequireAuth from './components/RequireAuth';
 import Unauthorized from './components/Unauthorized';
 import Record from './components/Record';
 import RecordList from './components/RecordList';
+import Home from './components/Home';
+import Transaction from './components/Transaction';
+import Report from './components/Report';
+import { AuthProvider } from './context/AuthContext';
 import './index.css';
 
 // Redirect component that sends users from root to static landing page
@@ -38,7 +42,15 @@ const router = createBrowserRouter([
     // Child routes accessible from admin dashboard
     children: [
       {
-        index: true, // Shows RecordList at /admin
+        index: true, // Shows Home at /admin
+        element: <Home />,
+      },
+      {
+        path: 'home', // Admin home dashboard at /admin/home
+        element: <Home />,
+      },
+      {
+        path: 'list', // Agent list at /admin/list
         element: <RecordList />,
       },
       {
@@ -48,6 +60,14 @@ const router = createBrowserRouter([
       {
         path: 'edit/:id', // Edit agent at /admin/edit/:id
         element: <Record />,
+      },
+      {
+        path: 'transaction', // Transaction management at /admin/transaction
+        element: <Transaction />,
+      },
+      {
+        path: 'report', // Report section at /admin/report
+        element: <Report />,
       },
     ],
   },
@@ -66,6 +86,8 @@ const router = createBrowserRouter([
 // Render React app to DOM
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );

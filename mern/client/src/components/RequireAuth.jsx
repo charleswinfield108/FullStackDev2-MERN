@@ -1,16 +1,22 @@
 // RequireAuth Component - Route guard/protection wrapper
 // Ensures only authenticated users can access protected routes
 import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 export default function RequireAuth({ children }) {
   const location = useLocation(); // Get current location for redirect after login
-  const token = sessionStorage.getItem('authToken'); // Check if user has valid token
+  const { isAuthenticated, isLoading } = useAuth(); // Check authentication status from context
 
-  // If no token, redirect to login page and save current location
-  if (!token) {
+  // Show loading while checking authentication
+  if (isLoading) {
+    return <div>Loading...</div>; // Or a custom loading component
+  }
+
+  // If not authenticated, redirect to login page
+  if (!isAuthenticated) {
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 
-  // If token exists, render protected content
+  // If authenticated, render protected content
   return children;
 }

@@ -30,7 +30,13 @@ router.post("/login", async (req, res) => {
       { expiresIn: "8h" }
     );
 
-    return res.status(200).send({ token });
+    return res.status(200).send({
+      token,
+      user_id: user._id.toString(),
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).send("Login failed");
