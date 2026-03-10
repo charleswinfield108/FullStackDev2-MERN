@@ -2,21 +2,20 @@
 // This component provides a login form for Rocket Elevators agents to access the admin console
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Toast, ToastContainer } from 'react-bootstrap';
 import { setSessionToken } from '../utils/cookieUtils';
 import { useAuth } from '../hooks/useAuth';
+import { useToast } from '../hooks/useToast';
 
 export default function Login() {
   // State management
   const [form, setForm] = useState({ email: '', password: '' }); // Form input values
   const [error, setError] = useState(''); // Error message display
   const [isLoading, setIsLoading] = useState(false); // Loading state during authentication
-  const [showSuccessToast, setShowSuccessToast] = useState(false); // Success toast visibility
-  const [showErrorToast, setShowErrorToast] = useState(false); // Error toast visibility
   
   // Router and auth hooks
   const navigate = useNavigate(); // Navigate to different routes
   const { login } = useAuth(); // Auth context function to set user data
+  const { showToast } = useToast(); // Toast notifications
 
   // Updates form fields when user types
   function updateForm(value) {
@@ -27,7 +26,6 @@ export default function Login() {
   async function onSubmit(event) {
     event.preventDefault();
     setError(''); // Clear previous errors
-    setShowErrorToast(false); // Hide error toast
     setIsLoading(true); // Show loading state
 
     try {
@@ -42,7 +40,7 @@ export default function Login() {
 
       // Handle authentication failure
       if (!response.ok) {
-        setShowErrorToast(true); // Show error toast
+        showToast('Incorrect Username or Password', 'danger');
         setIsLoading(false); // Clear loading state
         return;
       }
@@ -75,7 +73,7 @@ export default function Login() {
         last_name,
       });
 
-      setShowSuccessToast(true); // Show success toast
+      showToast('Login was Successful.', 'success');
       
       // Redirect after a brief delay to show the toast
       setTimeout(() => {
@@ -83,39 +81,13 @@ export default function Login() {
       }, 1500);
     } catch (err) {
       setError(err.message || 'Login failed'); // Display error to user
-      setShowErrorToast(true); // Show error toast
+      showToast('Login Failed. Please try again.', 'danger');
       setIsLoading(false); // Clear loading state
     }
   }
 
   return (
     <section className="login-page">
-      <ToastContainer position="middle-center" className="p-3">
-        <Toast 
-          onClose={() => setShowSuccessToast(false)} 
-          show={showSuccessToast} 
-          delay={3000} 
-          autohide
-          bg="success"
-        >
-          <Toast.Body className="text-white fw-bold">
-            Login was Successful.
-          </Toast.Body>
-        </Toast>
-
-        <Toast 
-          onClose={() => setShowErrorToast(false)} 
-          show={showErrorToast} 
-          delay={3000} 
-          autohide
-          bg="danger"
-        >
-          <Toast.Body className="text-white fw-bold">
-            Incorrect Username or Password
-          </Toast.Body>
-        </Toast>
-      </ToastContainer>
-
       <img
         alt="Rocket logo"
         className="login-logo"

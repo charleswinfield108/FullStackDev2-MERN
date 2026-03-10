@@ -1,0 +1,16 @@
+Charles Winfield Module 8 Deliverables
+
+GitHub Link: git@github.com:charleswinfield108/FullStackDev2-MERN.git
+
+
+YouTube Link: 
+
+
+
+Acessing the Project:
+Login: admin@admin.com
+Password: !1Qaz!1Qaz
+
+
+MongoDB Connection Information:
+ATLAS_URI=mongodb+srv://winfield:w1nf13ld@modules-db.865d5op.mongodb.net/employees

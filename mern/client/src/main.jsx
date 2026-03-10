@@ -13,6 +13,7 @@ import Home from './components/Home';
 import Transaction from './components/Transaction';
 import Report from './components/Report';
 import { AuthProvider } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
 import './index.css';
 
 // Redirect component that sends users from root to static landing page
@@ -87,7 +88,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <ToastProvider>
+        <RouterProvider router={router} />
+      </ToastProvider>
     </AuthProvider>
   </React.StrictMode>
 );
