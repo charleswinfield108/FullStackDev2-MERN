@@ -3,7 +3,7 @@ Charles Winfield Module 8 Deliverables
 GitHub Link: git@github.com:charleswinfield108/FullStackDev2-MERN.git
 
 
-YouTube Link: 
+YouTube Link: https://www.youtube.com/watch?v=OvDQhnNHNJI
 
 
 
